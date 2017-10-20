@@ -1,0 +1,8 @@
+build
+node_modules
+yarn-error.log
+.idea
+truffle.js
+build_webpack/
+firebase.json
+.firebaserc
