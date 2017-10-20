@@ -1,7 +1,5 @@
 import React, {Component} from 'react'
-import OrderBookContract from '../../build/contracts/OrderBook.json'
 
-const contract = require('truffle-contract');
 
 import * as actions from '../actions/homeActions';
 
@@ -15,16 +13,19 @@ class Home extends Component {
     super(props);
   }
 
-
-  componentWillMount() {
-
-  }
-
   componentDidMount() {
 
   }
 
+  selectToken(e, token) {
+    e.preventDefault();
+    this.props.actions.selectToken({token: token});
+    this.props.actions.goToOrderBook();
+  }
+
   render() {
+    let {tokenRegistryReducer} = this.props;
+    let tokens = tokenRegistryReducer.get('tokens');
 
     return (
       <div id="page-wrapper" className="Home">
@@ -37,6 +38,23 @@ class Home extends Component {
             </div>
           </div>
 
+          <div className="row">
+
+            <div className="col-sm-4">
+              <p>Please select a token you'd like to trade</p>
+
+              <div className="list-group">
+                {tokens ? tokens.map((token => (
+                  <a key={token.id} href="#" className="list-group-item" onClick={(e) => this.selectToken(e,token)}>
+                    {token.symbol} ({token.name})
+                  </a>
+                ))) : null}
+              </div>
+            </div>
+
+          </div>
+
+
         </div>
       </div>
     );
@@ -46,7 +64,8 @@ class Home extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    orderBookReducer: state.orderBookReducer
+    orderBookReducer: state.orderBookReducer,
+    tokenRegistryReducer: state.tokenRegistryReducer
   };
 };
 

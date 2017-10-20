@@ -13,15 +13,15 @@ contract('HumanStandardToken', function (accounts) {
       const instance = await HumanStandardToken.deployed();
 
       const initialBalance = await instance.balanceOf(accounts[0]);
-      assert.equal(initialBalance.toNumber(), 5 * Math.pow(10, 18));
+      assert.equal(initialBalance.toNumber(), 5 * Math.pow(10, 4));
 
-      await instance.transfer(accounts[1], 1 * Math.pow(10, 18) , {from: accounts[0]});
+      await instance.transfer(accounts[1], 1 * Math.pow(10, 4) , {from: accounts[0]});
 
       let newBalance0 = await instance.balanceOf(accounts[0]);
-      assert.equal(newBalance0.toNumber(), 4 * Math.pow(10, 18));
+      assert.equal(newBalance0.toNumber(), 4 * Math.pow(10, 4));
 
       let newBalance1 = await instance.balanceOf(accounts[1]);
-      assert.equal(newBalance1.toNumber(), Math.pow(10, 18));
+      assert.equal(newBalance1.toNumber(), Math.pow(10, 4));
     });
 
   });

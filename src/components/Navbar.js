@@ -14,17 +14,16 @@ class Navbar extends Component {
   }
 
 
-  componentWillMount() {
-
-  }
-
   componentDidMount() {
     this.props.actions.initWeb3();
   }
 
   render() {
-    let {navbarReducer} = this.props;
+    let {navbarReducer, tokenRegistryReducer} = this.props;
     let web3 = navbarReducer.get("web3");
+    let networkName = navbarReducer.get("networkName");
+    let token = tokenRegistryReducer.get("selectedToken");
+
     return (
       <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div className="navbar-header">
@@ -40,10 +39,21 @@ class Navbar extends Component {
 
           <li className="dropdown">
             <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-              <i className="fa fa-user"/> { web3 ? web3.eth.defaultAccount : null}
+              <b>Token:</b> {token ? token.symbol:null}
             </a>
           </li>
 
+          <li className="dropdown">
+            <a href="#" className="dropdown-toggle" data-toggle="dropdown">
+              <b>Network:</b> {networkName}
+            </a>
+          </li>
+
+          <li className="dropdown">
+            <a href="#" className="dropdown-toggle" data-toggle="dropdown">
+              <i className="fa fa-user"/> {web3 ? web3.eth.defaultAccount : null}
+            </a>
+          </li>
 
         </ul>
 
@@ -59,7 +69,6 @@ class Navbar extends Component {
         </div>
 
       </nav>
-
     );
   }
 }
@@ -67,7 +76,8 @@ class Navbar extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    navbarReducer: state.navbarReducer
+    navbarReducer: state.navbarReducer,
+    tokenRegistryReducer: state.tokenRegistryReducer,
   };
 };
 

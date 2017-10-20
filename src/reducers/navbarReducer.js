@@ -4,7 +4,9 @@ import {Map as ImmutableMap} from 'immutable';
 export default function navbarReducer(state = new ImmutableMap({}), action) {
 
   const setWeb3 = (state) => {
-    return state.set('web3', action.web3);
+    return state
+      .set('web3', action.web3)
+      .set('networkName', action.networkName);
   };
 
   const actions = {

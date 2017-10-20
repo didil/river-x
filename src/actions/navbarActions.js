@@ -9,3 +9,13 @@ export const setupWeb3 = {
   success: (data) => action(SETUP_WEB3.SUCCESS, data),
   failure: (error) => action(SETUP_WEB3.FAILURE, error),
 };
+
+export const LOAD_TOKENS = 'LOAD_TOKENS';
+export const loadTokens = data => action(LOAD_TOKENS, data);
+
+export const FETCH_LOAD_TOKENS = createRequestTypes('FETCH_LOAD_TOKENS');
+export const fetchLoadTokens = {
+  request: () => action(FETCH_LOAD_TOKENS.REQUEST),
+  success: (data) => action(FETCH_LOAD_TOKENS.SUCCESS, data),
+  failure: (error) => action(FETCH_LOAD_TOKENS.FAILURE, error),
+};

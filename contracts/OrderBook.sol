@@ -13,7 +13,7 @@ contract OrderBook {
     uint price;
     uint amount;
     address userAddress;
-    uint orderId;
+    uint id;
     }
 
     address public owner;
@@ -39,13 +39,13 @@ contract OrderBook {
         Order memory order = Order(_orderType, _price, _amount, msg.sender, orderId);
         orders[_tokenAddress].push(order);
 
-        NewOrder(_tokenAddress,_orderType, _price, _amount, msg.sender, orderId);
+        NewOrder(_tokenAddress, _orderType, _price, _amount, msg.sender, orderId);
     }
 
     function getOrder(address _tokenAddress, uint _id) constant public
-    returns (uint orderType, uint price, uint amount, address userAddress){
-        Order memory order = orders[_tokenAddress][_id];
-        return (order.orderType, order.price, order.amount, order.userAddress);
+    returns (uint orderType, uint price, uint amount, address userAddress, uint id){
+        Order memory order = orders[_tokenAddress][_id - 1];
+        return (order.orderType, order.price, order.amount, order.userAddress, order.id);
     }
 
     function getOrdersLength(address _tokenAddress) constant public
