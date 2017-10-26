@@ -13,3 +13,13 @@ export const fetchLoadOrders = {
   success: (data) => action(FETCH_LOAD_ORDERS.SUCCESS, data),
   failure: (error) => action(FETCH_LOAD_ORDERS.FAILURE, error),
 };
+
+export const GET_ETH_BALANCE = 'GET_ETH_BALANCE';
+export const getEthBalance = data => action(GET_ETH_BALANCE, data);
+
+export const FETCH_GET_ETH_BALANCE = createRequestTypes('FETCH_GET_ETH_BALANCE');
+export const fetchGetEthBalance = {
+  request: () => action(FETCH_GET_ETH_BALANCE.REQUEST),
+  success: (data) => action(FETCH_GET_ETH_BALANCE.SUCCESS, data),
+  failure: (error) => action(FETCH_GET_ETH_BALANCE.FAILURE, error),
+};

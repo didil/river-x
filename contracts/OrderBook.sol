@@ -19,9 +19,16 @@ contract OrderBook {
     address public owner;
 
     // orders by token
-    mapping (address => Order[]) orders;
+    mapping (address => Order[]) public orders;
+
+    // balance in eth by address
+    mapping (address => uint) public ethBalance;
 
     event NewOrder(address indexed _tokenAddress, uint _orderType, uint _price, uint _amount, address userAddress, uint orderId);
+
+    event EthDeposited(address indexed _userAddress, uint _amount);
+
+    event EthWithdrawn(address indexed _userAddress, uint _amount);
 
     modifier onlyOwner() {
         require(msg.sender == owner);
@@ -51,6 +58,20 @@ contract OrderBook {
     function getOrdersLength(address _tokenAddress) constant public
     returns (uint length){
         return orders[_tokenAddress].length;
+    }
+
+    function depositEth() public payable {
+        ethBalance[msg.sender] = ethBalance[msg.sender].add(msg.value);
+
+        EthDeposited(msg.sender, msg.value);
+    }
+
+    function withdrawEth(uint amount) public {
+        ethBalance[msg.sender] = ethBalance[msg.sender].sub(amount);
+
+        msg.sender.transfer(amount);
+
+        EthWithdrawn(msg.sender, amount);
     }
 
 }

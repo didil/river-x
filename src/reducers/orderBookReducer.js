@@ -13,9 +13,15 @@ export default function orderBookReducer(state = new ImmutableMap({}), action) {
       .set('orders', []);
   };
 
+  const setEthBalance = (state) => {
+    return state
+      .set('ethBalance', action.ethBalance);
+  };
+
   const actions = {
     'SELECT_TOKEN': () => resetOrders(state),
     'FETCH_LOAD_ORDERS_SUCCESS': () => setOrders(state),
+    'FETCH_GET_ETH_BALANCE_SUCCESS': () => setEthBalance(state),
     'DEFAULT': () => state
   };
 

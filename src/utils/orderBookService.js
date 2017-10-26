@@ -25,8 +25,21 @@ async function loadOrders(web3, tokenContractAddress) {
   return orders;
 }
 
+
+async function getEthBalance(web3, userAddress) {
+  const orderBookContract = contract(OrderBookContract);
+  orderBookContract.setProvider(web3.currentProvider);
+
+  const instance = await orderBookContract.deployed();
+
+  let ethBalance = await instance.ethBalance(userAddress);
+
+  return ethBalance.toNumber();
+}
+
 let orderBookService = {
-  loadOrders: loadOrders
+  loadOrders: loadOrders,
+  getEthBalance: getEthBalance,
 };
 
 export default orderBookService;

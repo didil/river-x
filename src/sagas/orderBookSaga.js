@@ -14,12 +14,29 @@ function* loadOrders(data) {
   }
 }
 
+function* getEthBalance(data) {
+  yield put(orderBookActions.fetchGetEthBalance.request());
+  try {
+    const web3 = yield select(state => state.navbarReducer.get("web3"));
+    const userAddress = web3.eth.defaultAccount;
+    const ethBalance = yield call(orderBookService.getEthBalance, web3, userAddress);
+    yield put(orderBookActions.fetchLoadOrders.success({ethBalance}));
+  } catch (error) {
+    yield put(orderBookActions.fetchLoadOrders.failure({error}));
+  }
+}
+
 function* watchLoadOrders() {
   yield takeEvery(orderBookActions.LOAD_ORDERS, loadOrders);
 }
 
+function* watchGetEthBalance() {
+  yield takeEvery(orderBookActions.GET_ETH_BALANCE, getEthBalance);
+}
+
 export default function* orderBookSaga() {
   yield all([
-    watchLoadOrders()
+    watchLoadOrders(),
+    watchGetEthBalance(),
   ]);
 }
