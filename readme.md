@@ -12,4 +12,8 @@ Built with :
 - React.js + Redux + Redux Sagas +  Babel + Webpack
 - Smart Contract Unit with Mocha.js
 
+Todo/Possible improvements : 
+- Balance locking to avoid phantom orders
+- Balance and Orders syncing "a-la-websockets" via Ethereum Events
+
 Dapp live on the Rinkeby testnet at https://river-x.firebaseapp.com/ 
