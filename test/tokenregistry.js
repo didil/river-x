@@ -11,46 +11,32 @@ contract('TokenRegistry', function (accounts) {
   it("add/delete/get", async function () {
     const instance = await TokenRegistry.deployed();
 
-    await instance.addToken("My Token", 18, "MTK", "0x0000000000000000000000012354689321091313");
-    await instance.addToken("Other Token", 4, "OTK", "0x0000000000000000000000012354689321091315");
+    let token1_Address = "0x0000000000000000000000012354689321091313";
+    let token2_Address = "0x0000000000000000000000012354689321091315";
 
-    const values = await instance.getToken("MTK");
+    await instance.addToken("My Token", 18, "MTK", token1_Address);
+    await instance.addToken("Other Token", 4, "OTK", token2_Address);
+
+    const values = await instance.getToken(token1_Address);
 
     assert.equal(values[0], "My Token");
     assert.equal(values[1], 18);
-    assert.equal(values[2], "0x0000000000000000000000012354689321091313");
+    assert.equal(values[2], "MTK");
     assert.equal(values[3].toNumber(), 1);
 
+    let tokenAddresses = await instance.getTokenAddresses();
+    assert.deepEqual(tokenAddresses, [token1_Address, token2_Address]);
 
-    const tokenSymbolsLength = await instance.getTokenSymbolsLength();
-    assert.equal(tokenSymbolsLength.toNumber(), 2);
+    await instance.removeToken(token1_Address, 1);
 
-    let tokenSymbols = [];
-    for (let i = 0; i < tokenSymbolsLength.toNumber(); i++) {
-      const tokenSymbol = await instance.getTokenSymbol(i + 1);
-      tokenSymbols.push(tokenSymbol);
-    }
-    assert.deepEqual(tokenSymbols, ['MTK', 'OTK']);
-
-    await instance.removeToken("MTK", 1);
-
-    const newMTKValues = await instance.getToken("MTK");
+    const newMTKValues = await instance.getToken(token1_Address);
     assert.equal(newMTKValues[0], "");
 
-    const newOTKValues = await instance.getToken("OTK");
+    const newOTKValues = await instance.getToken(token2_Address);
     assert.equal(newOTKValues[0], "Other Token");
 
-    const newTokenSymbolsLength = await instance.getTokenSymbolsLength();
-    assert.equal(newTokenSymbolsLength.toNumber(), 2);
-
-
-    let newTokenSymbols = [];
-    for (let i = 0; i < newTokenSymbolsLength.toNumber(); i++) {
-      const tokenSymbol = await instance.getTokenSymbol(i + 1);
-      newTokenSymbols.push(tokenSymbol);
-    }
-    assert.deepEqual(newTokenSymbols, ['', 'OTK']);
-
+    let newTokenAddresses = await instance.getTokenAddresses();
+    assert.deepEqual(newTokenAddresses, ["0x0000000000000000000000000000000000000000", token2_Address]);
   });
 
 });

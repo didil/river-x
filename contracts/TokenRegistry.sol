@@ -1,64 +1,99 @@
 pragma solidity ^0.4.11;
 
+import "./Ownable.sol";
 
-contract TokenRegistry {
+contract TokenRegistry is Ownable {
 
-    struct TokenInfo {
+  /*
+   *  Events
+   */
+
+  event TokenAdded(string _name, uint8 _decimals, string _symbol, address _contractAddress);
+  event TokenRemoved(address _contractAddress);
+
+  /*
+   * Storage
+   */
+
+  struct TokenInfo {
     string name;
     uint8 decimals;
     string symbol;
-    address contractAddress;
     uint id;
-    }
+  }
 
-    address public owner;
+  // tokens mapping
+  mapping(address => TokenInfo) tokens;
 
-    mapping (string => TokenInfo) tokens;
+  // token symbols array
+  address[] tokenAddresses;
 
-    string[] tokenSymbols;
+  /*
+  * Public functions
+  */
 
-    event TokenAdded(string _name, uint8 _decimals, string _symbol, address _contractAddress);
+  /**
+  * @dev Contract constructor
+  */
+  function TokenRegistry() public {
+  }
 
-    event TokenRemoved(string _symbol);
+  /**
+  * @dev Add Token
+  * @param _name Token name
+  * @param _decimals Token decimals
+  * @param _symbol Token symbol
+  * @param _contractAddress Token contract address
+  */
+  function addToken(string _name, uint8 _decimals, string _symbol, address _contractAddress) onlyOwner public {
+    // avoid overwrite
+    require(tokens[_contractAddress].id == 0);
 
-    modifier onlyOwner() {
-        require(msg.sender == owner);
-        _;
-    }
+    // add token
+    tokens[_contractAddress] = TokenInfo(_name, _decimals, _symbol, tokenAddresses.length + 1);
+    tokenAddresses.push(_contractAddress);
 
-    function TokenRegistry() public {
-        owner = msg.sender;
-    }
+    // Log event
+    TokenAdded(_name, _decimals, _symbol, _contractAddress);
+  }
 
-    function addToken(string _name, uint8 _decimals, string _symbol, address _contractAddress) onlyOwner public {
-        // avoid overwrite
-        require(tokens[_symbol].contractAddress == address(0));
+  /**
+  * @dev Remove Token
+  * @param _contractAddress Token address
+  * @param _id Token id
+  */
+  function removeToken(address _contractAddress, uint _id) onlyOwner public {
+    // remove token data
+    delete tokens[_contractAddress];
+    // remove address
+    delete tokenAddresses[_id - 1];
 
-        tokens[_symbol] = TokenInfo(_name, _decimals, _symbol, _contractAddress, tokenSymbols.length + 1);
-        tokenSymbols.push(_symbol);
+    // Log event
+    TokenRemoved(_contractAddress);
+  }
 
-        TokenAdded(_name, _decimals, _symbol, _contractAddress);
-    }
+  /**
+  * @dev Get Token
+  * @param _contractAddress Token address
+  */
+  function getToken(address _contractAddress) constant returns (string name, uint8 decimals, string symbol, uint id) {
+    var tokenInfo = tokens[_contractAddress];
+    return (tokenInfo.name, tokenInfo.decimals, tokenInfo.symbol, tokenInfo.id);
+  }
 
-    function removeToken(string _symbol, uint _id) onlyOwner public {
-        delete tokens[_symbol];
-        delete tokenSymbols[_id - 1];
-        TokenRemoved(_symbol);
-    }
+  /**
+  * @dev Get Token Addresses length
+  */
+  function getTokenAddressesLength() constant public
+  returns (uint length){
+    return tokenAddresses.length;
+  }
 
-    function getToken(string _symbol) constant returns (string name, uint8 decimals, address contractAddress, uint id) {
-        var tokenInfo = tokens[_symbol];
-        return (tokenInfo.name, tokenInfo.decimals, tokenInfo.contractAddress, tokenInfo.id);
-    }
-
-    function getTokenSymbol(uint _id) constant returns (string symbol) {
-        var tokenSymbol = tokenSymbols[_id - 1];
-        return (tokenSymbol);
-    }
-
-    function getTokenSymbolsLength() constant public
-    returns (uint length){
-        return tokenSymbols.length;
-    }
+  /**
+  * @dev Get token addresses
+  */
+  function getTokenAddresses() public constant returns (address[])  {
+    return tokenAddresses;
+  }
 
 }
