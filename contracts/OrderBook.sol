@@ -177,6 +177,8 @@ contract OrderBook is Ownable {
   * @dev deposit Eth to contract
   */
   function depositEth() public payable {
+    require(msg.value > 0);
+
     // save amount to user's eth balance
     ethBalances[msg.sender] = ethBalances[msg.sender].add(msg.value);
 
@@ -189,6 +191,9 @@ contract OrderBook is Ownable {
   * @param _amount amount
   */
   function withdrawEth(uint _amount) public {
+    // check balance sufficient
+    require(ethBalances[msg.sender] >= _amount);
+
     // withdraw amount from user's eth balance
     ethBalances[msg.sender] = ethBalances[msg.sender].sub(_amount);
 

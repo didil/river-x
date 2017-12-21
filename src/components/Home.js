@@ -9,9 +9,6 @@ import {connect} from 'react-redux'
 import '../css/Home.css'
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
 
@@ -24,8 +21,10 @@ class Home extends Component {
   }
 
   render() {
-    let {tokenRegistryReducer} = this.props;
+    let {tokenRegistryReducer, navbarReducer} = this.props;
     let tokens = tokenRegistryReducer.get('tokens');
+
+    let web3 = navbarReducer.get("web3");
 
     return (
       <div id="page-wrapper" className="Home">
@@ -39,21 +38,23 @@ class Home extends Component {
           </div>
 
           <div className="row">
+            {!web3 || !web3.eth.defaultAccount ?
+              "Please use MetaMask and Connect to the Rinkeby Ethereum testnet ..."
+              :
 
-            <div className="col-sm-4">
-              <p>Please select a token you'd like to trade</p>
+              <div className="col-sm-4">
+                <p>Please select a token you'd like to trade</p>
 
-              <div className="list-group">
-                {tokens ? tokens.map((token => (
-                  <a key={token.id} href="#" className="list-group-item" onClick={(e) => this.selectToken(e,token)}>
-                    {token.symbol} ({token.name})
-                  </a>
-                ))) : null}
+                <div className="list-group">
+                  {tokens ? tokens.map((token => (
+                    <a key={token.id} href="#" className="list-group-item" onClick={(e) => this.selectToken(e, token)}>
+                      {token.symbol} ({token.name})
+                    </a>
+                  ))) : null}
+                </div>
               </div>
-            </div>
-
+            }
           </div>
-
 
         </div>
       </div>
@@ -65,7 +66,8 @@ class Home extends Component {
 const mapStateToProps = (state) => {
   return {
     orderBookReducer: state.orderBookReducer,
-    tokenRegistryReducer: state.tokenRegistryReducer
+    tokenRegistryReducer: state.tokenRegistryReducer,
+    navbarReducer: state.navbarReducer
   };
 };
 

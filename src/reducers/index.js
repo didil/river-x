@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import {routerReducer} from 'react-router-redux';
-import {reducer as notificationsReducer} from 'react-notification-system-redux';
+import {reducer as notifications} from 'react-notification-system-redux';
 
 import orderBookReducer from './orderBookReducer';
 import navbarReducer from './navbarReducer';
@@ -11,7 +11,7 @@ const rootReducer = combineReducers({
   navbarReducer,
   tokenRegistryReducer,
   routing: routerReducer,
-  notificationsReducer
+  notifications,
 });
 
 export default rootReducer;

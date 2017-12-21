@@ -8,29 +8,23 @@ async function loadTokens(web3) {
 
   const instance = await tokenRegistryContract.deployed();
 
-  const tokenSymbolsLength = await instance.getTokenSymbolsLength();
-
-  let tokenSymbols = [];
-  for (let i = 0; i < tokenSymbolsLength.toNumber(); i++) {
-    const tokenSymbol = await instance.getTokenSymbol(i + 1);
-    tokenSymbols.push(tokenSymbol);
-  }
+  let tokenAddresses = await instance.getTokenAddresses();
 
   let tokens = [];
 
-  for (let i = 0; i < tokenSymbols.length; i++) {
-    const tokenSymbol = tokenSymbols[i];
-    if (!tokenSymbol) { // deleted symbol
+  for (let i = 0; i < tokenAddresses.length; i++) {
+    const tokenAddress = tokenAddresses[i];
+    if (!tokenAddress) { // deleted symbol
       continue;
     }
 
-    const values = await instance.getToken(tokenSymbol);
+    const values = await instance.getToken(tokenAddress);
     tokens.push({
       name: values[0],
-      decimals: values[1],
-      contractAddress: values[2],
-      id: values[3],
-      symbol: tokenSymbol
+      decimals: values[1].toNumber(),
+      symbol: values[2],
+      id: values[3].toNumber(),
+      contractAddress: tokenAddress
     });
   }
 

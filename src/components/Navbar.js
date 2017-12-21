@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import {NavLink} from "react-router-dom";
+import Notifications from 'react-notification-system-redux';
 
-import * as actions from '../actions/navbarActions';
+import * as navbarActions from '../actions/navbarActions';
+import * as notificationActions from '../actions/notificationActions';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux'
@@ -9,13 +11,16 @@ import {connect} from 'react-redux'
 import '../css/Home.css'
 
 class Navbar extends Component {
-  constructor(props) {
-    super(props);
-  }
-
 
   componentDidMount() {
-    this.props.actions.initWeb3();
+    this.props.navbarActions.initWeb3();
+
+    this.props.notificationActions.success({
+      notification: {
+        message: 'Welcome to River X',
+        position: 'br'
+      }
+    });
   }
 
   render() {
@@ -26,6 +31,9 @@ class Navbar extends Component {
 
     return (
       <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <Notifications
+          notifications={this.props.notifications}
+        />
         <div className="navbar-header">
           <button type="button" className="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
             <span className="sr-only">Toggle navigation</span>
@@ -63,7 +71,7 @@ class Navbar extends Component {
               <NavLink exact to="/"><i className="fa fa-fw fa-dashboard"/>Home</NavLink>
             </li>
             <li>
-              <NavLink exact to="/order-book"><i className="fa fa-fw fa-dashboard"/>Order Book</NavLink>
+              <NavLink exact to="/order-book"><i className="fa fa-fw fa-book"/>Order Book</NavLink>
             </li>
           </ul>
         </div>
@@ -78,12 +86,14 @@ const mapStateToProps = (state) => {
   return {
     navbarReducer: state.navbarReducer,
     tokenRegistryReducer: state.tokenRegistryReducer,
+    notifications: state.notifications
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(actions, dispatch),
+    navbarActions: bindActionCreators(navbarActions, dispatch),
+    notificationActions: bindActionCreators(notificationActions, dispatch),
   };
 };
 

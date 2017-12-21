@@ -1,4 +1,4 @@
-import { call, fork, take } from 'redux-saga/effects';
+import { call, take } from 'redux-saga/effects';
 
 export function* takexSaga(pattern) {
   let action;

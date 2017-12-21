@@ -5,9 +5,12 @@ import configureStore from './store/configureStore';
 import {Router, Route} from 'react-router-dom'
 
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Home from './components/Home';
 import OrderBook from './components/OrderBook';
-import history from './history'
+import history from './history';
+
+import './index.css';
 
 const store = configureStore();
 
@@ -20,6 +23,8 @@ ReactDOM.render(
         <Navbar/>
         <Route exact path="/" component={Home}/>
         <Route path="/order-book" component={OrderBook}/>
+
+        <Footer/>
       </div>
     </Router>
   </Provider>

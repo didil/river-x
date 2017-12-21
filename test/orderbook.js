@@ -9,6 +9,14 @@ const proxiedWeb3 = new Proxy(web3, proxiedWeb3Handler);
 
 contract('OrderBook', function (accounts) {
 
+  let account0_initial_ethBalance;
+  let account1_initial_ethBalance;
+
+  before(async function beforeTest() {
+    account0_initial_ethBalance = await proxiedWeb3.eth.getBalance(accounts[0]);
+    account1_initial_ethBalance = await proxiedWeb3.eth.getBalance(accounts[1]);
+  });
+
   it("deposit/withdraw eth", async function () {
     const instance = await OrderBook.deployed();
 
@@ -29,8 +37,8 @@ contract('OrderBook', function (accounts) {
     assert.equal(account1ContractBalance.toNumber(), web3.toWei(3, "ether"));
 
     let account1Balance = await proxiedWeb3.eth.getBalance(accounts[1]);
-    assert.isAbove(account1Balance.toNumber(), web3.toWei(96.9, "ether"));
-    assert.isBelow(account1Balance.toNumber(), web3.toWei(97, "ether"));
+    assert.isAbove(account1Balance.toNumber(), account1_initial_ethBalance - (web3.toWei(3.1, "ether")));
+    assert.isBelow(account1Balance.toNumber(), account1_initial_ethBalance - (web3.toWei(3, "ether")));
     // check ether was sent (accounting for gas)
 
     await instance.withdrawEth(web3.toWei(1, "ether"), {from: accounts[1]});
@@ -39,8 +47,8 @@ contract('OrderBook', function (accounts) {
     assert.equal(account1ContractBalance.toNumber(), web3.toWei(2, "ether"));
 
     account1Balance = await proxiedWeb3.eth.getBalance(accounts[1]);
-    assert.isAbove(account1Balance.toNumber(), web3.toWei(97.9, "ether"));
-    assert.isBelow(account1Balance.toNumber(), web3.toWei(98, "ether"));
+    assert.isAbove(account1Balance.toNumber(), account1_initial_ethBalance - (web3.toWei(2.1, "ether")));
+    assert.isBelow(account1Balance.toNumber(), account1_initial_ethBalance - (web3.toWei(2, "ether")));
 
     contractBalance = await proxiedWeb3.eth.getBalance(instance.address);
     assert.equal(contractBalance.toNumber(), web3.toWei(4, "ether"));
@@ -67,7 +75,7 @@ contract('OrderBook', function (accounts) {
       assert.equal(account0ContractBalance.toNumber(), 50);
 
       let account0TokenBalance = await tokenInstance.balanceOf(accounts[0]);
-      assert.equal(account0TokenBalance.toNumber(), 48950);
+      assert.equal(account0TokenBalance.toNumber(), 49998950);
 
       await tokenInstance.approve(instance.address, 80, {from: accounts[1]});
       await instance.depositTokens(tokenInstance.address, 80, {from: accounts[1]});
