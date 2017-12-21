@@ -59,14 +59,14 @@ class OrderBook extends Component {
   render() {
     let {orderBookReducer, navbarReducer, tokenRegistryReducer} = this.props;
     let web3 = navbarReducer.get("web3");
+    let selectedToken = tokenRegistryReducer.get('selectedToken');
 
-    if (!web3) {
+    if (!web3 || !selectedToken) {
       return null;
     }
 
     let orders = orderBookReducer.get("orders");
     let balances = orderBookReducer.get("balances");
-    let selectedToken = tokenRegistryReducer.get('selectedToken');
 
     return (
       <div id="page-wrapper" className="Home">
