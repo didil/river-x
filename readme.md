@@ -15,5 +15,6 @@ Built with :
 Todo/Possible improvements : 
 - Balance locking to avoid phantom orders
 - Balance and Orders syncing "a-la-websockets" via Ethereum Events
+- Sharding to avoid query slowdown of orders due to order list growth
 
 Dapp live on the Rinkeby testnet at https://river-x.firebaseapp.com/ 
